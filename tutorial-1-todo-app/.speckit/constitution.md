@@ -1,15 +1,34 @@
-# Constitution for ToDo App
+# ToDoアプリ憲法 (Constitution)
 
-This document outlines the core principles and constraints for the ToDo App project. All development and specifications must adhere to these guidelines.
+この文書は、ToDoアプリ開発における意思決定の基準を定義する。仕様策定・実装・レビューは、以下の原則と制約に従うこと。
 
-## 1. Core Principles
+## 1. 開発原則
 
-- **Simple and Intuitive UI:** The user interface must be clean, easy to understand, and require minimal instruction. The user experience should be frictionless.
-- **Responsiveness:** The application must be fully responsive and usable across a range of devices, including desktops, tablets, and mobile phones.
-- **Accessibility:** The application must be accessible to users with disabilities, following WCAG 2.1 AA guidelines as a minimum standard. This includes keyboard navigation, screen reader compatibility, and sufficient color contrast.
+### 1.1 シンプルで直感的なUI
+- 初見のユーザーが説明なしで主要操作（追加・完了切替・削除・絞り込み）を理解できるUIを優先する。
+- 画面要素は必要最小限に保ち、視認性と操作性を損なう装飾を避ける。
 
-## 2. Technical Constraints
+### 1.2 レスポンシブデザイン
+- デスクトップ、タブレット、モバイルで一貫して利用可能なレイアウトを提供する。
+- 画面幅に応じて余白・文字サイズ・操作ターゲットを調整し、タッチ操作でも使いやすくする。
 
-- **Vanilla JavaScript:** The project must be implemented using only plain JavaScript. No external frameworks or libraries (like React, Vue, Angular, or jQuery) are to be used for the core application logic.
-- **Local Storage:** All ToDo data must be persisted in the browser's local storage. No server-side database or backend is required.
-- **Styling:** CSS should be used for styling. No CSS frameworks (like Bootstrap or Tailwind CSS) are allowed.
+### 1.3 アクセシビリティ
+- キーボードのみで主要機能にアクセスできることを必須とする。
+- フォーム要素に適切なラベルを関連付け、状態変化が支援技術に伝わる実装を行う。
+- 十分なコントラストを確保し、色だけに依存した情報伝達を避ける。
+
+## 2. 技術制約
+
+### 2.1 バニラJavaScript（フレームワーク不使用）
+- アプリケーションの実装はバニラJavaScriptで行う。
+- React、Vue、Angular、jQuery などのフレームワーク／ライブラリは使用しない。
+
+### 2.2 データ保存はローカルストレージ
+- ToDoデータはブラウザのLocalStorageに保存する。
+- サーバーサイドのDBやバックエンドAPIを前提としない。
+
+## 3. 品質基準
+
+- 仕様に定義された必須機能（追加・完了切替・削除・表示・完了済みフィルタリング）を満たすこと。
+- ページ再読み込み後もToDoデータが保持されること。
+- 変更時は本憲法への適合性を優先し、要件と実装の乖離を残さないこと。
