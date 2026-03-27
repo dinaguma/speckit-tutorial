@@ -1,87 +1,15 @@
-# ToDo App - Project Constitution
+# Constitution for ToDo App
 
-## Project Vision
-Create a simple, intuitive, and accessible ToDo list application that helps users manage their daily tasks efficiently.
+This document outlines the core principles and constraints for the ToDo App project. All development and specifications must adhere to these guidelines.
 
-## Core Principles
+## 1. Core Principles
 
-### 1. Simplicity First
-- Keep the user interface clean and minimal
-- Focus on core functionality without unnecessary features
-- Avoid complexity in both code and user experience
+- **Simple and Intuitive UI:** The user interface must be clean, easy to understand, and require minimal instruction. The user experience should be frictionless.
+- **Responsiveness:** The application must be fully responsive and usable across a range of devices, including desktops, tablets, and mobile phones.
+- **Accessibility:** The application must be accessible to users with disabilities, following WCAG 2.1 AA guidelines as a minimum standard. This includes keyboard navigation, screen reader compatibility, and sufficient color contrast.
 
-### 2. User Experience
-- Intuitive interactions that require no learning curve
-- Responsive design that works on all device sizes
-- Fast and immediate feedback for all user actions
-- Accessible to users with disabilities (WCAG 2.1 AA compliance)
+## 2. Technical Constraints
 
-### 3. Data Privacy
-- All data stored locally in the user's browser
-- No external servers or data transmission
-- User maintains full control of their data
-
-## Technical Constraints
-
-### Technology Stack
-- **HTML5**: Semantic markup
-- **CSS3**: Modern styling with flexbox/grid
-- **Vanilla JavaScript**: No frameworks or libraries
-- **LocalStorage API**: For data persistence
-
-### Browser Support
-- Modern evergreen browsers (Chrome, Firefox, Safari, Edge)
-- No IE11 support required
-
-### Performance Requirements
-- Page load time under 1 second
-- Instant response to user interactions
-- Minimal memory footprint
-
-## Development Practices
-
-### Code Quality
-- Clean, readable code with meaningful variable names
-- Consistent code formatting and style
-- Comments for complex logic only
-- DRY (Don't Repeat Yourself) principle
-
-### File Structure
-```
-todo-app/
-├── index.html       # Main HTML structure
-├── styles.css       # All styling
-└── app.js          # Application logic
-```
-
-### Naming Conventions
-- camelCase for JavaScript variables and functions
-- kebab-case for CSS classes
-- Descriptive names that explain purpose
-
-## Security Considerations
-- Input sanitization to prevent XSS
-- Validate all user input
-- Safe HTML rendering
-
-## Accessibility Requirements
-- Semantic HTML elements
-- ARIA labels where needed
-- Keyboard navigation support
-- Sufficient color contrast (4.5:1 minimum)
-- Focus indicators for interactive elements
-
-## Out of Scope
-- User authentication
-- Cloud synchronization
-- Collaboration features
-- Mobile native apps
-- Backend server
-- Database integration
-
-## Success Criteria
-- Users can add, complete, and delete tasks
-- Data persists across browser sessions
-- Works on mobile and desktop
-- Meets accessibility standards
-- Zero external dependencies
+- **Vanilla JavaScript:** The project must be implemented using only plain JavaScript. No external frameworks or libraries (like React, Vue, Angular, or jQuery) are to be used for the core application logic.
+- **Local Storage:** All ToDo data must be persisted in the browser's local storage. No server-side database or backend is required.
+- **Styling:** CSS should be used for styling. No CSS frameworks (like Bootstrap or Tailwind CSS) are allowed.
