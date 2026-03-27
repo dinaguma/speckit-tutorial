@@ -1,347 +1,133 @@
-# ToDo App - Implementation Plan
+# ToDoアプリ 技術実装計画
 
-## Architecture Overview
+## 1. 目的
+本計画は、仕様書と憲法に従ってToDoアプリを実装するための技術方針と作業手順を定義する。
 
-This is a simple single-page application (SPA) following the MVC-like pattern with vanilla JavaScript.
+## 2. 前提と制約
+- バニラJavaScriptで実装する（フレームワーク不使用）。
+- データ永続化はLocalStorageを使用する。
+- 主要機能は追加・完了切替・削除・一覧表示・フィルタリング。
+- レスポンシブ対応とアクセシビリティ要件を満たす。
 
-```
-┌──────────────┐
-│  index.html  │  ← Structure & UI
-└──────┬───────┘
-       │
-┌──────▼───────┐
-│  styles.css  │  ← Presentation
-└──────────────┘
-       │
-┌──────▼───────┐
-│   app.js     │  ← Logic & Data Management
-└──────┬───────┘
-       │
-┌──────▼───────┐
-│ LocalStorage │  ← Persistence
-└──────────────┘
-```
+## 3. ファイル構成
 
-## File Structure
+### 3.1 生成対象
+- `todo-app/index.html`: 画面の構造とアクセシブルなUI要素
+- `todo-app/styles.css`: レイアウト、状態表現、レスポンシブ対応
+- `todo-app/app.js`: 状態管理、描画、イベント処理、永続化
 
-```
-tutorial-1-todo-app/
-├── index.html       # Main HTML structure
-├── styles.css       # All styling
-├── app.js          # Application logic
-└── .speckit/       # Specification files
-```
+### 3.2 責務分離方針
+- HTML: セマンティック構造と操作要素の定義のみ
+- CSS: 視覚表現とレスポンシブ調整
+- JS: データ操作、DOM描画、イベント処理、LocalStorage I/O
 
-## Data Model
+## 4. HTMLファイル構造
 
-### Task Object Structure
-```javascript
+### 4.1 セクション設計
+- `header`: アプリタイトル
+- `main`: 入力エリア、フィルタエリア、一覧エリア
+- `form`:
+	- `label` + `input[type="text"]`（タスク入力）
+	- `button[type="submit"]`（追加）
+- `nav` または `section`（フィルタボタン群）
+- `ul`（ToDo一覧）
+- 空状態メッセージ要素
+
+### 4.2 アクセシビリティ方針
+- 入力欄に明示的ラベルを付与する。
+- アイコンボタン（削除など）に `aria-label` を設定する。
+- キーボードフォーカスが見えるスタイルを適用する。
+- 必要に応じて状態表示に `aria-live` を使用する。
+
+## 5. CSSスタイリング方針
+
+### 5.1 基本方針
+- モバイルファーストで設計し、必要最小限のメディアクエリを使う。
+- 可読性重視（十分な文字サイズ、余白、コントラスト）とする。
+- 状態（通常/ホバー/フォーカス/完了）をクラスで表現する。
+
+### 5.2 主なスタイル対象
+- フォーム行の配置（入力欄と追加ボタン）
+- フィルタボタンのアクティブ表示
+- ToDo項目の行レイアウト（チェック領域、テキスト、削除）
+- 完了時の見た目（打ち消し線、色変化）
+- 空状態メッセージ
+
+### 5.3 レスポンシブ要件
+- 幅320px以上で操作可能な最小レイアウトを担保する。
+- タブレット・デスクトップで最大幅と余白を調整する。
+- タップ領域は十分なサイズ（目安 44px 四方）を確保する。
+
+## 6. JavaScriptでのデータ管理
+
+### 6.1 データモデル
+```js
 {
-  id: number,           // Unique ID (timestamp)
-  text: string,         // Task description
-  completed: boolean,   // Completion status
-  createdAt: number     // Creation timestamp
+	id: string,
+	text: string,
+	completed: boolean,
+	createdAt: string
 }
 ```
 
-### Application State
-```javascript
-{
-  tasks: Task[],        // Array of all tasks
-  filter: string        // Current filter: 'all', 'active', 'completed'
-}
-```
+### 6.2 アプリ状態
+- `todos`: ToDo配列
+- `currentFilter`: `all | active | completed`
 
-## Component Breakdown
+### 6.3 関数設計
+- `loadTodos()`: LocalStorageから読み込み、異常時は空配列
+- `saveTodos(todos)`: JSON化して保存
+- `addTodo(text)`: バリデーション後に追加
+- `toggleTodo(id)`: 完了状態の反転
+- `deleteTodo(id)`: 指定IDの削除
+- `getFilteredTodos(filter)`: フィルタ適用
+- `render()`: 一覧と状態表示の再描画
 
-### 1. HTML Structure (index.html)
+## 7. LocalStorageの使用方法
 
-#### Layout Sections:
-- **Header**: App title
-- **Input Section**: Task input field and add button
-- **Filter Bar**: Filter buttons (All/Active/Completed)
-- **Task List**: Unordered list of tasks
-- **Footer**: Task count display
+### 7.1 保存キー
+- `todo-app-tasks`
 
-#### Key Elements:
-```html
-<input id="todo-input" type="text">
-<button id="add-btn">Add</button>
-<div id="filters">
-  <button class="filter-btn active" data-filter="all">All</button>
-  <button class="filter-btn" data-filter="active">Active</button>
-  <button class="filter-btn" data-filter="completed">Completed</button>
-</div>
-<ul id="todo-list"></ul>
-<div id="task-count"></div>
-```
+### 7.2 処理ルール
+- 初期化時に一度読み込みを行う。
+- 追加・切替・削除のたびに保存を実行する。
+- `JSON.parse` 失敗時は空配列にフォールバックする。
+- LocalStorage利用不可時は警告を表示し、メモリ上で動作継続する。
 
-### 2. Styling (styles.css)
+## 8. イベントハンドリング
 
-#### CSS Architecture:
-- **Reset/Base**: Normalize styles
-- **Layout**: Container, flexbox for positioning
-- **Components**: Individual component styles
-- **States**: Hover, focus, active states
-- **Utilities**: Helper classes
+### 8.1 イベント一覧
+- フォーム `submit`: タスク追加
+- 一覧エリア `click`（イベント委譲）:
+	- 完了切替ボタン押下
+	- 削除ボタン押下
+- フィルタボタン `click`: 表示条件の切り替え
 
-#### Design Tokens:
-```css
-:root {
-  --primary-color: #4a90e2;
-  --completed-color: #999;
-  --text-color: #333;
-  --border-color: #ddd;
-  --bg-color: #f5f5f5;
-  --danger-color: #e74c3c;
-}
-```
+### 8.2 設計方針
+- 一覧項目は動的生成するため、親要素へのイベント委譲を採用する。
+- ハンドラは「状態更新 -> 保存 -> 再描画」の順で統一する。
+- 1つのイベントで複数責務を持たせず、関数を分割する。
 
-#### Responsive Breakpoints:
-- Mobile: < 600px
-- Desktop: >= 600px
+## 9. 実装ステップ
+1. HTML骨組みを作成し、主要要素に識別子を付与する。
+2. CSSで基本レイアウトと状態スタイルを実装する。
+3. JSで初期化、データモデル、描画関数を実装する。
+4. 追加・切替・削除の各操作を実装し保存処理を接続する。
+5. フィルタ機能と空状態表示を実装する。
+6. LocalStorage異常系（破損データ・利用不可）を実装する。
+7. キーボード操作とラベル設定を確認する。
+8. 受け入れ基準に沿って手動テストを実施する。
 
-### 3. Application Logic (app.js)
+## 10. テスト観点
+- 追加: 正常入力で追加、空入力で拒否
+- 完了切替: 状態が往復し再読み込み後も保持
+- 削除: 対象のみ削除され再表示されない
+- フィルタ: all/active/completed が正しく切り替わる
+- 表示: 0件時の空状態メッセージ
+- レスポンシブ: モバイル・デスクトップで操作可能
+- アクセシビリティ: キーボード操作とラベルの有無
 
-#### Module Organization:
-```javascript
-// 1. State Management
-let state = {
-  tasks: [],
-  filter: 'all'
-};
-
-// 2. LocalStorage Operations
-const storage = {
-  save(tasks),
-  load(),
-  clear()
-};
-
-// 3. Task Operations
-const taskManager = {
-  addTask(text),
-  deleteTask(id),
-  toggleTask(id),
-  getFilteredTasks(filter)
-};
-
-// 4. UI Rendering
-const ui = {
-  renderTasks(),
-  updateTaskCount(),
-  clearInput(),
-  showError(message)
-};
-
-// 5. Event Handlers
-const handlers = {
-  handleAddTask(),
-  handleDeleteTask(id),
-  handleToggleTask(id),
-  handleFilterChange(filter)
-};
-
-// 6. Initialization
-const init = () => {
-  loadFromStorage();
-  attachEventListeners();
-  render();
-};
-```
-
-## Implementation Steps
-
-### Phase 1: HTML Structure
-1. Create basic HTML5 boilerplate
-2. Add semantic structure (header, main, footer)
-3. Create input section with form elements
-4. Add filter buttons
-5. Add empty task list container
-6. Include meta tags for responsive design
-7. Link CSS and JS files
-
-**Deliverable**: Functional HTML skeleton
-
-### Phase 2: CSS Styling
-1. Apply CSS reset/normalization
-2. Set up CSS variables for theming
-3. Style the container and layout
-4. Style input section
-5. Style filter buttons
-6. Style task list items
-7. Add hover/focus states
-8. Implement responsive design
-9. Add animations/transitions
-
-**Deliverable**: Fully styled UI (non-functional)
-
-### Phase 3: Core JavaScript - Data Layer
-1. Define state object
-2. Implement LocalStorage save function
-3. Implement LocalStorage load function
-4. Add error handling for storage operations
-5. Create task factory function
-6. Implement addTask logic
-7. Implement deleteTask logic
-8. Implement toggleTask logic
-9. Implement getFilteredTasks logic
-
-**Deliverable**: Working data management layer
-
-### Phase 4: Core JavaScript - UI Layer
-1. Implement renderTasks function
-2. Create task item HTML template
-3. Implement updateTaskCount function
-4. Implement clearInput function
-5. Add error display function
-6. Ensure DOM updates reflect state
-
-**Deliverable**: UI rendering system
-
-### Phase 5: Event Handling
-1. Add event listener for Add button
-2. Add event listener for Enter key
-3. Add event delegation for task checkboxes
-4. Add event delegation for delete buttons
-5. Add event listeners for filter buttons
-6. Implement input validation
-7. Add debouncing if needed
-
-**Deliverable**: Interactive application
-
-### Phase 6: Integration & Polish
-1. Wire up all components
-2. Initialize app on DOM load
-3. Load data from LocalStorage
-4. Render initial state
-5. Test all user flows
-6. Add loading states if needed
-7. Implement accessibility features
-8. Add keyboard shortcuts
-
-**Deliverable**: Fully functional application
-
-### Phase 7: Error Handling & Edge Cases
-1. Handle LocalStorage unavailable
-2. Handle corrupted data
-3. Handle quota exceeded
-4. Add input validation feedback
-5. Handle empty states gracefully
-6. Add console logging for debugging
-
-**Deliverable**: Robust, production-ready app
-
-## Technical Decisions
-
-### Why Vanilla JavaScript?
-- No build process needed
-- Faster page load
-- Learning fundamental concepts
-- Zero dependencies
-
-### Why LocalStorage?
-- Simple API
-- Synchronous operations
-- No server needed
-- Sufficient for this use case
-
-### Event Delegation Strategy
-Use event delegation on the task list container instead of individual listeners for better performance with many tasks.
-
-### State Management Pattern
-Single source of truth (state object) with unidirectional data flow:
-1. User action → Event handler
-2. Event handler → Update state
-3. State update → Re-render UI
-4. State update → Save to LocalStorage
-
-## Performance Optimizations
-
-### Rendering
-- Update only changed DOM elements when possible
-- Use DocumentFragment for batch inserts
-- Debounce input validation
-
-### Storage
-- Batch storage operations
-- Minimize JSON serialization
-
-### DOM Manipulation
-- Cache DOM references
-- Use event delegation
-- Minimize reflows/repaints
-
-## Accessibility Implementation
-
-### Semantic HTML
-```html
-<button aria-label="Delete task">×</button>
-<input aria-label="New task">
-<ul role="list" aria-label="Todo list">
-```
-
-### Keyboard Navigation
-- Tab order: Input → Add button → Filters → Tasks
-- Enter: Submit new task
-- Space: Toggle task completion
-- Focus visible on all interactive elements
-
-### Screen Reader Support
-- Announce task count updates
-- Label all form controls
-- Use aria-live for dynamic updates
-
-## Testing Strategy
-
-### Manual Testing Checklist
-1. Add task with valid input
-2. Try to add empty task (should fail)
-3. Toggle task completion
-4. Delete task
-5. Test all three filters
-6. Refresh page (data persists)
-7. Clear LocalStorage and refresh (empty state)
-8. Test with 100+ tasks
-9. Test keyboard navigation
-10. Test with screen reader
-
-### Browser Testing
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## Deployment
-
-### Static Hosting Options
-- GitHub Pages
-- Netlify
-- Vercel
-- Simple HTTP server
-
-### No Build Process Needed
-All files can be served directly without compilation or bundling.
-
-## Future Enhancements (Out of Scope)
-
-- Task editing
-- Task priority levels
-- Due dates
-- Categories/tags
-- Search functionality
-- Export/import data
-- Dark mode
-- Keyboard shortcuts
-- Undo/redo
-- Task notes
-
-## Success Criteria
-
-- [ ] All user stories implemented
-- [ ] All acceptance criteria met
-- [ ] Accessible (WCAG 2.1 AA)
-- [ ] Works on all target browsers
-- [ ] Data persists correctly
-- [ ] No JavaScript errors
-- [ ] Clean, maintainable code
+## 11. リスクと対策
+- LocalStorageの容量制限: 保存失敗を捕捉してユーザーに通知
+- データ破損: パース失敗時に初期化しクラッシュ回避
+- DOM更新の複雑化: 描画ロジックを `render()` に集約

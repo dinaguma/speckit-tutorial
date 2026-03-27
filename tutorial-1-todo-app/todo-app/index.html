@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToDoリスト</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="app-header">
+    <h1>ToDoリスト</h1>
+    <p class="subtitle">シンプルに、今日のタスクを整理</p>
+  </header>
+
+  <main class="app" aria-labelledby="app-title">
+    <h2 id="app-title" class="visually-hidden">ToDoアプリ本体</h2>
+
+    <section class="panel" aria-label="タスク追加">
+      <form id="todo-form" class="todo-form" novalidate>
+        <label for="todo-input">新しいタスク</label>
+        <div class="input-row">
+          <input
+            id="todo-input"
+            name="todo"
+            type="text"
+            maxlength="200"
+            placeholder="例: 買い物に行く"
+            autocomplete="off"
+            required
+          >
+          <button type="submit" id="add-btn">追加</button>
+        </div>
+        <p id="input-help" class="help-text">200文字まで入力できます</p>
+        <p id="error-message" class="error-message" role="alert" aria-live="assertive"></p>
+      </form>
+    </section>
+
+    <section class="panel" aria-label="表示フィルタ">
+      <nav class="filters" aria-label="ToDoフィルタ">
+        <button type="button" class="filter-btn is-active" data-filter="all" aria-pressed="true">すべて</button>
+        <button type="button" class="filter-btn" data-filter="active" aria-pressed="false">未完了</button>
+        <button type="button" class="filter-btn" data-filter="completed" aria-pressed="false">完了済み</button>
+      </nav>
+    </section>
+
+    <section class="panel" aria-label="ToDo一覧">
+      <ul id="todo-list" class="todo-list"></ul>
+      <p id="empty-state" class="empty-state">タスクがありません。最初のタスクを追加しましょう。</p>
+      <p id="task-count" class="task-count" aria-live="polite">未完了 0 件</p>
+      <p id="status-message" class="status-message" aria-live="polite"></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,180 +1,161 @@
-# ToDo App - Functional Specification
+# ToDoリストアプリ 機能仕様書
 
-## Overview
-A simple, browser-based ToDo list application that allows users to manage their daily tasks with local data persistence.
+## 1. 概要
+ブラウザ上で動作するシンプルなToDoリストアプリを提供する。ユーザーはタスクの追加・完了管理・削除・表示切り替えを行え、データはLocalStorageに永続化される。
 
-## User Stories
+## 2. スコープ
 
-### US-1: Add New Task
-**As a** user
-**I want to** add a new task to my todo list
-**So that** I can keep track of things I need to do
+### 2.1 対象
+- 単一ユーザー向けのクライアントサイドWebアプリ
+- バニラJavaScriptで実装
 
-**Acceptance Criteria:**
-- User can enter task text in an input field
-- User can submit the task by pressing Enter or clicking an Add button
-- Task appears immediately in the todo list
-- Input field clears after task is added
-- Empty tasks cannot be added
-- Tasks are saved to LocalStorage
+### 2.2 対象外
+- サインイン/認証
+- サーバー連携、クラウド同期
+- タスクの編集、優先度、期限設定
 
-### US-2: Mark Task as Complete
-**As a** user
-**I want to** mark tasks as complete
-**So that** I can track my progress
+## 3. 必須機能
 
-**Acceptance Criteria:**
-- User can click on a task to toggle completion status
-- Completed tasks have visual indication (strikethrough, different color)
-- Completion state persists across browser sessions
-- User can toggle back to incomplete if needed
+### F-1 ToDoアイテムの追加
+- 入力欄にテキストを入力し、追加ボタンまたはEnterキーで新規ToDoを作成できる。
+- 空文字または空白のみの入力は追加できない。
 
-### US-3: Delete Task
-**As a** user
-**I want to** delete tasks I no longer need
-**So that** my list stays clean and relevant
+### F-2 ToDoアイテムの完了/未完了の切り替え
+- 各ToDoに対して完了状態をトグルできる。
+- 完了状態は視覚的に判別可能である（例: 打ち消し線、状態アイコン）。
 
-**Acceptance Criteria:**
-- Each task has a delete button (X icon)
-- Clicking delete removes the task immediately
-- Deletion is permanent (no undo)
-- Confirmation not required (keep it simple)
-- Deletion updates LocalStorage
+### F-3 ToDoアイテムの削除
+- 各ToDoを個別に削除できる。
+- 削除操作後、一覧表示と保存データの両方に即時反映される。
 
-### US-4: View All Tasks
-**As a** user
-**I want to** see all my tasks in a list
-**So that** I can review what needs to be done
+### F-4 ToDoリストの表示
+- 登録済みToDoを一覧表示できる。
+- ToDoが0件の場合は空状態メッセージを表示する。
 
-**Acceptance Criteria:**
-- Tasks displayed in chronological order (newest first)
-- Each task shows its text and completion status
-- List updates immediately when tasks change
-- Empty state message when no tasks exist
+### F-5 完了済みアイテムのフィルタリング
+- 表示フィルタとして「すべて」「未完了」「完了済み」を提供する。
+- 選択中フィルタが判別可能である。
 
-### US-5: Filter Tasks
-**As a** user
-**I want to** filter tasks by status
-**So that** I can focus on specific tasks
+## 4. ユーザーストーリー
 
-**Acceptance Criteria:**
-- Three filter options: All, Active, Completed
-- "All" shows all tasks (default)
-- "Active" shows only incomplete tasks
-- "Completed" shows only completed tasks
-- Filter selection is visually indicated
-- Filter state does not need to persist
+### US-1 タスク追加
+- ユーザーとして、新しいタスクを追加できる。
+- そうすることで、やるべきことを記録できる。
 
-## Functional Requirements
+### US-2 完了マーク
+- ユーザーとして、タスクを完了済みにマークできる。
+- そうすることで、進捗を把握できる。
 
-### FR-1: Task Model
-Each task must have:
-- `id`: Unique identifier (timestamp)
-- `text`: Task description (string, max 200 characters)
-- `completed`: Boolean completion status
-- `createdAt`: Timestamp of creation
+### US-3 タスク削除
+- ユーザーとして、不要なタスクを削除できる。
+- そうすることで、一覧を常に整理された状態に保てる。
 
-### FR-2: Data Persistence
-- Tasks saved to LocalStorage as JSON
-- Data loaded on page load
-- Updates saved immediately on any change
-- Storage key: `todo-app-tasks`
+### US-4 表示切り替え
+- ユーザーとして、すべて/未完了/完了済みのタスクを表示できる。
+- そうすることで、必要な情報に素早く集中できる。
 
-### FR-3: User Interface Elements
+## 5. 受け入れ基準
 
-#### Input Section
-- Text input field (placeholder: "What needs to be done?")
-- Add button or Enter key to submit
-- Auto-focus on input field
+### AC-1 追加機能
+- Given: 入力欄に1文字以上の有効な文字列が入力されている。
+- When: ユーザーが追加ボタンを押す、またはEnterキーを押下する。
+- Then: 新しいToDoが一覧に1件追加され、入力欄は空になり、LocalStorageにも同一内容が保存される。
 
-#### Task List
-- Scrollable list of tasks
-- Each task item contains:
-  - Checkbox or click area for completion toggle
-  - Task text
-  - Delete button (X icon)
+- Given: 入力欄が空、または空白文字のみである。
+- When: ユーザーが追加操作を行う。
+- Then: ToDoは追加されず、件数は変化しない。
 
-#### Filter Bar
-- Three filter buttons: All, Active, Completed
-- Active filter is highlighted
-- Shows count of active tasks
+### AC-2 完了切り替え機能
+- Given: 未完了のToDoが1件以上表示されている。
+- When: ユーザーが対象ToDoの完了切り替え操作を行う。
+- Then: 対象ToDoの状態が完了に変わり、完了を示す視覚表現が適用され、LocalStorageへ保存される。
 
-### FR-4: Input Validation
-- Trim whitespace from task text
-- Reject empty or whitespace-only tasks
-- Limit task text to 200 characters
-- Show brief error feedback for invalid input
+- Given: 完了済みのToDoが1件以上表示されている。
+- When: ユーザーが同じ操作を行う。
+- Then: 対象ToDoの状態が未完了に戻り、視覚表現とLocalStorageが更新される。
 
-## Non-Functional Requirements
+### AC-3 削除機能
+- Given: 一覧にToDoが1件以上存在する。
+- When: ユーザーが任意のToDoの削除操作を行う。
+- Then: 対象ToDoは一覧から即時に消え、件数が1減り、LocalStorageからも削除される。
 
-### NFR-1: Performance
-- Instant response to user interactions
-- Support up to 1000 tasks without performance degradation
-- Minimal DOM manipulation
+- Given: ToDoを削除済みである。
+- When: ページを再読み込みする。
+- Then: 削除したToDoは再表示されない。
 
-### NFR-2: Usability
-- Works without JavaScript enabled: graceful degradation message
-- Clear visual feedback for all actions
-- Hover states for interactive elements
-- Focus states for keyboard navigation
+### AC-4 表示機能
+- Given: LocalStorageにToDoデータが保存されている。
+- When: アプリを初期表示または再読み込みする。
+- Then: 保存済みToDoが一覧に表示される。
 
-### NFR-3: Accessibility
-- Semantic HTML (ul/li for lists, button elements)
-- ARIA labels for icon-only buttons
-- Keyboard navigation support:
-  - Tab through interactive elements
-  - Enter to add task
-  - Space to toggle completion
-- Screen reader friendly
+- Given: 表示対象のToDoが0件である。
+- When: 一覧が描画される。
+- Then: 空状態メッセージを表示し、ToDo項目は表示しない。
 
-### NFR-4: Browser Compatibility
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
+### AC-5 フィルタ機能
+- Given: 未完了と完了済みのToDoが混在している。
+- When: ユーザーが「すべて」を選択する。
+- Then: 全ToDoが表示される。
 
-## Edge Cases
+- Given: 未完了と完了済みのToDoが混在している。
+- When: ユーザーが「未完了」を選択する。
+- Then: 未完了ToDoのみ表示される。
 
-### EC-1: LocalStorage Unavailable
-- Detect if LocalStorage is available
-- Show warning message if not available
-- App still functions but data won't persist
+- Given: 未完了と完了済みのToDoが混在している。
+- When: ユーザーが「完了済み」を選択する。
+- Then: 完了済みToDoのみ表示される。
 
-### EC-2: Corrupted Data
-- Validate JSON data on load
-- Reset to empty array if data is corrupted
-- Log error to console
+- Given: 任意のフィルタが選択されている。
+- When: ユーザーが別のフィルタを選択する。
+- Then: 表示内容が即時更新され、現在選択中フィルタが視覚的に判別できる。
 
-### EC-3: Storage Quota Exceeded
-- Handle QuotaExceededError gracefully
-- Show user-friendly error message
-- Prevent app crash
+### AC-6 キーボード操作と基本アクセシビリティ
+- Given: キーボードのみを使用する。
+- When: Tabキーで操作要素を移動し、EnterまたはSpaceで操作する。
+- Then: 追加・完了切り替え・削除・フィルタ切り替えの主要操作が実行できる。
 
-### EC-4: Long Task Text
-- Enforce 200 character limit
-- Show character count as user types
-- Truncate with ellipsis if needed for display
+- Given: 画面を閲覧する。
+- When: 入力欄やボタンを確認する。
+- Then: 入力欄にはラベルがあり、アイコンのみのボタンには意味が分かるラベル（aria-label等）が設定されている。
 
-## UI Mockup Description
+### AC-7 異常系
+- Given: LocalStorageが利用できない、または保存データが破損している。
+- When: アプリが初期化処理を行う。
+- Then: アプリはクラッシュせず、ユーザーに状態を通知したうえで利用継続できる。
 
-```
-┌─────────────────────────────────────────┐
-│          My ToDo List                    │
-├─────────────────────────────────────────┤
-│ [What needs to be done?    ] [Add]      │
-├─────────────────────────────────────────┤
-│ Filters: [All] [Active] [Completed]     │
-├─────────────────────────────────────────┤
-│ ☐ Buy groceries                    [X]  │
-│ ☑ Finish report                    [X]  │
-│ ☐ Call dentist                     [X]  │
-├─────────────────────────────────────────┤
-│ 2 items left                             │
-└─────────────────────────────────────────┘
-```
+## 6. データ仕様
 
-## Success Metrics
-- User can add a task in under 5 seconds
-- All interactions respond within 100ms
-- Zero data loss on page refresh
-- 100% keyboard accessible
+### 6.1 ToDoデータモデル
+- id: 一意な識別子（文字列または数値）
+- text: タスク本文
+- completed: 完了状態（boolean）
+- createdAt: 作成日時（任意）
+
+### 6.2 永続化
+- 保存先はLocalStorageとする。
+- 保存キーは `todo-app-tasks` とする。
+- 追加・状態切替・削除のたびに保存内容を更新する。
+- 初期表示時にLocalStorageから復元する。
+
+## 7. 非機能要件
+
+### 7.1 ユーザビリティ
+- 初見ユーザーが主要機能を説明なしで操作できること。
+- 操作対象（ボタン、入力欄、フィルタ）が視覚的に明確であること。
+
+### 7.2 レスポンシブ
+- モバイル（幅320px以上）からデスクトップまで利用可能なレイアウトにする。
+- タッチ操作しやすいサイズの操作要素を提供する。
+
+### 7.3 アクセシビリティ
+- キーボードのみで主要操作が完結できること。
+- 入力欄やボタンに適切なラベルを設定すること。
+- 状態の判別を色のみに依存しないこと。
+
+### 7.4 パフォーマンス
+- 通常操作（追加・切替・削除・フィルタ）は体感遅延なく反応すること。
+
+## 8. エッジケース
+- LocalStorageが利用不可の場合、永続化不可であることをユーザーに通知する。
+- 保存データが壊れている場合、空リストで初期化してアプリ継続可能とする。
+- 非常に長い入力は制限値（例: 200文字）でバリデーションする。

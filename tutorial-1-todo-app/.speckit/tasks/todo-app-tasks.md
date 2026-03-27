@@ -1,612 +1,156 @@
-# ToDo App - Implementation Tasks
-
-## Task Breakdown
-
-### Phase 1: HTML Structure ✓ Priority: High
-
-#### Task 1.1: Create HTML5 Boilerplate
-**Estimated Time**: 10 minutes
-**Dependencies**: None
-
-**Steps**:
-- Create `index.html` file
-- Add DOCTYPE, html, head, and body tags
-- Add meta charset and viewport tags
-- Add title: "My ToDo List"
-- Link `styles.css` and `app.js` files
-
-**Acceptance Criteria**:
-- Valid HTML5 document
-- Responsive meta tag included
-- Files linked correctly
-
----
-
-#### Task 1.2: Build Input Section
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 1.1
-
-**Steps**:
-- Create header with h1 title
-- Add input field with id "todo-input"
-- Add placeholder text: "What needs to be done?"
-- Add "Add" button with id "add-btn"
-- Wrap in semantic container
-
-**Acceptance Criteria**:
-- Input accepts text
-- Button is clickable
-- Semantic HTML used
-
----
-
-#### Task 1.3: Create Filter Bar
-**Estimated Time**: 10 minutes
-**Dependencies**: Task 1.1
-
-**Steps**:
-- Create div with id "filters"
-- Add three buttons: All, Active, Completed
-- Add class "filter-btn" to each
-- Add data-filter attribute (all/active/completed)
-- Set "All" as default active
-
-**Acceptance Criteria**:
-- Three filter buttons present
-- Data attributes set correctly
-
----
-
-#### Task 1.4: Build Task List Container
-**Estimated Time**: 10 minutes
-**Dependencies**: Task 1.1
-
-**Steps**:
-- Create ul element with id "todo-list"
-- Add aria-label "Todo list"
-- Create footer div for task count
-- Add id "task-count" to footer
-
-**Acceptance Criteria**:
-- Semantic list element used
-- ARIA labels added
-
----
-
-### Phase 2: CSS Styling ✓ Priority: High
-
-#### Task 2.1: CSS Reset and Variables
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 1.1
-
-**Steps**:
-- Create `styles.css` file
-- Add box-sizing reset
-- Define CSS variables for colors
-- Set default font family and sizes
-- Add body margin and padding reset
-
-**Acceptance Criteria**:
-- Consistent styling foundation
-- CSS variables defined
-
----
-
-#### Task 2.2: Layout Styling
-**Estimated Time**: 20 minutes
-**Dependencies**: Task 2.1
-
-**Steps**:
-- Style main container (max-width, centering)
-- Add background color
-- Style header section
-- Create card-like appearance with shadow
-- Add padding and margins
-
-**Acceptance Criteria**:
-- Centered container
-- Clean, modern look
-- Responsive on mobile
-
----
-
-#### Task 2.3: Input Section Styling
-**Estimated Time**: 20 minutes
-**Dependencies**: Task 2.2
-
-**Steps**:
-- Style input field (padding, border, font-size)
-- Style Add button (colors, hover state)
-- Create flex layout for input row
-- Add focus states
-- Style placeholder text
-
-**Acceptance Criteria**:
-- Input and button aligned
-- Hover and focus states visible
-- Accessible color contrast
-
----
-
-#### Task 2.4: Filter Button Styling
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 2.2
-
-**Steps**:
-- Style filter buttons as pills
-- Add active state styling
-- Add hover effects
-- Create flex layout for filter bar
-- Add spacing between buttons
-
-**Acceptance Criteria**:
-- Active filter clearly visible
-- Smooth hover transitions
-
----
-
-#### Task 2.5: Task List Item Styling
-**Estimated Time**: 25 minutes
-**Dependencies**: Task 2.2
-
-**Steps**:
-- Style list items with borders
-- Add checkbox styling
-- Style task text
-- Add delete button styling (X icon)
-- Create completed state (strikethrough, gray)
-- Add hover effects for items
-
-**Acceptance Criteria**:
-- Clear visual hierarchy
-- Completed tasks visually distinct
-- Delete button accessible
-
----
-
-#### Task 2.6: Responsive Design
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 2.5
-
-**Steps**:
-- Add media query for mobile (< 600px)
-- Adjust font sizes for mobile
-- Adjust padding and spacing
-- Test on different screen sizes
-
-**Acceptance Criteria**:
-- Works on mobile screens
-- No horizontal scrolling
-- Touch-friendly targets
-
----
-
-### Phase 3: JavaScript - Data Layer ✓ Priority: High
-
-#### Task 3.1: Initialize Application State
-**Estimated Time**: 10 minutes
-**Dependencies**: None
-
-**Steps**:
-- Create `app.js` file
-- Define state object with tasks array and filter
-- Add comments for code organization
-- Create constants for storage key
-
-**Acceptance Criteria**:
-- State object initialized
-- Code well-commented
-
----
-
-#### Task 3.2: Implement LocalStorage Functions
-**Estimated Time**: 20 minutes
-**Dependencies**: Task 3.1
-
-**Steps**:
-- Create saveTasks function
-- Create loadTasks function
-- Add try-catch for error handling
-- Handle corrupted data gracefully
-- Add console logging
-
-**Acceptance Criteria**:
-- Data saves to LocalStorage
-- Data loads on init
-- Errors handled gracefully
-
----
-
-#### Task 3.3: Create Task Factory Function
-**Estimated Time**: 10 minutes
-**Dependencies**: Task 3.1
-
-**Steps**:
-- Create createTask function
-- Accept text parameter
-- Generate unique ID (timestamp)
-- Return task object with all properties
-- Add input validation
-
-**Acceptance Criteria**:
-- Valid task objects created
-- Unique IDs generated
-
----
-
-#### Task 3.4: Implement Task CRUD Operations
-**Estimated Time**: 30 minutes
-**Dependencies**: Task 3.3
-
-**Steps**:
-- Create addTask function
-- Create deleteTask function (filter by ID)
-- Create toggleTask function (toggle completed)
-- Update state after each operation
-- Call saveTasks after each change
-
-**Acceptance Criteria**:
-- Can add tasks
-- Can delete tasks
-- Can toggle completion
-- State updates correctly
-
----
-
-#### Task 3.5: Implement Filter Logic
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 3.4
-
-**Steps**:
-- Create getFilteredTasks function
-- Accept filter parameter
-- Return filtered array based on filter type
-- Handle 'all', 'active', 'completed' cases
-
-**Acceptance Criteria**:
-- Returns all tasks for 'all'
-- Returns incomplete for 'active'
-- Returns completed for 'completed'
-
----
-
-### Phase 4: JavaScript - UI Layer ✓ Priority: High
-
-#### Task 4.1: Implement Task List Rendering
-**Estimated Time**: 30 minutes
-**Dependencies**: Task 3.5
-
-**Steps**:
-- Create renderTasks function
-- Get filtered tasks
-- Clear existing list
-- Generate HTML for each task
-- Append to DOM
-- Handle empty state
-
-**Acceptance Criteria**:
-- Tasks display correctly
-- Completed tasks styled differently
-- Empty state shows message
-
----
-
-#### Task 4.2: Create Task Item HTML Template
-**Estimated Time**: 20 minutes
-**Dependencies**: Task 4.1
-
-**Steps**:
-- Create createTaskElement function
-- Build li element
-- Add checkbox/click area
-- Add task text span
-- Add delete button
-- Add appropriate classes
-- Add data-id attribute
-
-**Acceptance Criteria**:
-- Task items match design
-- Accessible markup
-- Data attributes for event handling
-
----
-
-#### Task 4.3: Implement Task Count Display
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 3.5
-
-**Steps**:
-- Create updateTaskCount function
-- Count active (incomplete) tasks
-- Update footer text with count
-- Handle singular/plural ("1 item" vs "2 items")
-
-**Acceptance Criteria**:
-- Accurate count displayed
-- Updates on task changes
-
----
-
-#### Task 4.4: Implement Input Field Helpers
-**Estimated Time**: 10 minutes
-**Dependencies**: None
-
-**Steps**:
-- Create clearInput function
-- Create getInputValue function (trim whitespace)
-- Create focusInput function
-- Add input validation helper
-
-**Acceptance Criteria**:
-- Input clears after add
-- Whitespace trimmed
-- Focus returns to input
-
----
-
-### Phase 5: Event Handling ✓ Priority: High
-
-#### Task 5.1: Implement Add Task Handler
-**Estimated Time**: 20 minutes
-**Dependencies**: Task 3.4, Task 4.4
-
-**Steps**:
-- Create handleAddTask function
-- Get and validate input value
-- Call addTask if valid
-- Call renderTasks
-- Clear and focus input
-- Show error for invalid input
-
-**Acceptance Criteria**:
-- Tasks added on button click
-- Tasks added on Enter key
-- Empty input rejected
-- UI updates immediately
-
----
-
-#### Task 5.2: Implement Delete Task Handler
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 3.4, Task 4.1
-
-**Steps**:
-- Create handleDeleteTask function
-- Accept task ID parameter
-- Call deleteTask
-- Re-render task list
-
-**Acceptance Criteria**:
-- Tasks deleted on click
-- UI updates immediately
-- State and storage updated
-
----
-
-#### Task 5.3: Implement Toggle Task Handler
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 3.4, Task 4.1
-
-**Steps**:
-- Create handleToggleTask function
-- Accept task ID parameter
-- Call toggleTask
-- Re-render task list
-
-**Acceptance Criteria**:
-- Tasks toggle on click
-- Visual state updates
-- State and storage updated
-
----
-
-#### Task 5.4: Implement Filter Change Handler
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 3.5, Task 4.1
-
-**Steps**:
-- Create handleFilterChange function
-- Update state.filter
-- Update active button class
-- Re-render task list
-
-**Acceptance Criteria**:
-- Filter changes on click
-- Active filter highlighted
-- Correct tasks displayed
-
----
-
-#### Task 5.5: Set Up Event Listeners
-**Estimated Time**: 25 minutes
-**Dependencies**: Task 5.1-5.4
-
-**Steps**:
-- Add click listener to Add button
-- Add keypress listener for Enter key
-- Use event delegation on task list
-- Add listeners to filter buttons
-- Add input focus on page load
-
-**Acceptance Criteria**:
-- All interactions work
-- Event delegation used correctly
-- No memory leaks
-
----
-
-### Phase 6: Integration & Polish ✓ Priority: Medium
-
-#### Task 6.1: Application Initialization
-**Estimated Time**: 20 minutes
-**Dependencies**: All previous tasks
-
-**Steps**:
-- Create init function
-- Load tasks from LocalStorage
-- Attach all event listeners
-- Render initial state
-- Focus input field
-- Call init on DOMContentLoaded
-
-**Acceptance Criteria**:
-- App loads correctly
-- Saved data appears
-- All features functional
-
----
-
-#### Task 6.2: Add Loading States
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 6.1
-
-**Steps**:
-- Add loading class to body
-- Remove after init complete
-- Style loading state if needed
-
-**Acceptance Criteria**:
-- Smooth initial load
-- No flash of unstyled content
-
----
-
-#### Task 6.3: Accessibility Enhancements
-**Estimated Time**: 25 minutes
-**Dependencies**: Task 6.1
-
-**Steps**:
-- Add ARIA labels to all buttons
-- Ensure keyboard navigation works
-- Add focus visible styles
-- Test with screen reader
-- Add skip links if needed
-
-**Acceptance Criteria**:
-- Fully keyboard accessible
-- Screen reader friendly
-- WCAG 2.1 AA compliant
-
----
-
-#### Task 6.4: Add Keyboard Shortcuts (Optional)
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 6.1
-
-**Steps**:
-- Add Ctrl/Cmd+Enter for add task
-- Add Delete key for selected task
-- Document shortcuts
-
-**Acceptance Criteria**:
-- Shortcuts work as expected
-- Don't interfere with normal input
-
----
-
-### Phase 7: Error Handling ✓ Priority: High
-
-#### Task 7.1: LocalStorage Error Handling
-**Estimated Time**: 20 minutes
-**Dependencies**: Task 3.2
-
-**Steps**:
-- Detect LocalStorage availability
-- Handle QuotaExceededError
-- Handle SecurityError (private browsing)
-- Show user-friendly error messages
-- Degrade gracefully
-
-**Acceptance Criteria**:
-- App doesn't crash
-- Users informed of issues
-- Data loss prevented when possible
-
----
-
-#### Task 7.2: Input Validation Feedback
-**Estimated Time**: 15 minutes
-**Dependencies**: Task 5.1
-
-**Steps**:
-- Add error message display
-- Show message for empty input
-- Show message for too-long input
-- Auto-dismiss after 3 seconds
-
-**Acceptance Criteria**:
-- Clear validation messages
-- Non-intrusive feedback
-
----
-
-#### Task 7.3: Empty State Handling
-**Estimated Time**: 10 minutes
-**Dependencies**: Task 4.1
-
-**Steps**:
-- Show message when no tasks
-- Different message for each filter
-- Style empty state nicely
-
-**Acceptance Criteria**:
-- Clear communication
-- Encourages user action
-
----
-
-### Testing & Quality Assurance ✓ Priority: High
-
-#### Task 8.1: Cross-Browser Testing
-**Estimated Time**: 30 minutes
-**Dependencies**: All implementation tasks
-
-**Steps**:
-- Test in Chrome
-- Test in Firefox
-- Test in Safari
-- Test in Edge
-- Document any issues
-
-**Acceptance Criteria**:
-- Works in all target browsers
-- No console errors
-
----
-
-#### Task 8.2: Manual Testing
-**Estimated Time**: 20 minutes
-**Dependencies**: All implementation tasks
-
-**Steps**:
-- Run through all user stories
-- Test edge cases
-- Test with many tasks (100+)
-- Test LocalStorage limits
-- Test offline functionality
-
-**Acceptance Criteria**:
-- All features work
-- No bugs found
-
----
-
-## Summary
-
-**Total Estimated Time**: ~8 hours
-**Total Tasks**: 32
-
-**Critical Path**:
-1. HTML Structure (Tasks 1.1-1.4)
-2. Data Layer (Tasks 3.1-3.5)
-3. UI Layer (Tasks 4.1-4.4)
-4. Event Handling (Tasks 5.1-5.5)
-5. Integration (Task 6.1)
-
-**Can be done in parallel**:
-- CSS Styling (Phase 2) can be done alongside JavaScript development
-- Accessibility (Task 6.3) can be addressed throughout development
-- Testing can be done incrementally
-
-**Recommended Order**:
-Phase 1 → Phase 3 → Phase 4 → Phase 5 → Phase 2 → Phase 6 → Phase 7 → Testing
+# ToDoアプリ 実装タスク
+
+## 1. タスク方針
+- 仕様書の必須機能（追加・完了切替・削除・表示・フィルタ）を最小実装から順に構築する。
+- 各タスクは1回の実装作業で完了判定できる粒度に分割する。
+- 優先度は P0（必須）/P1（品質）/P2（改善）で管理する。
+
+## 2. 実装タスクリスト
+
+### T01 プロジェクト骨組み作成（P0）
+- 目的: 実装の土台となるファイルを準備する。
+- 作業内容:
+	- `todo-app/index.html` を作成する。
+	- `todo-app/styles.css` を作成する。
+	- `todo-app/app.js` を作成する。
+	- `index.html` からCSS/JSを読み込む。
+- 完了条件:
+	- ブラウザでHTMLが表示され、コンソールエラーがない。
+
+### T02 HTML構造実装（P0）
+- 目的: UI操作に必要なセマンティック構造を定義する。
+- 作業内容:
+	- タイトル、入力フォーム、追加ボタン、フィルタ領域、一覧領域、空状態メッセージを配置する。
+	- 入力欄にlabelを関連付ける。
+	- 削除ボタン用のアクセシビリティ属性方針を反映できる構造にする。
+- 完了条件:
+	- 必要なDOM要素に識別子（id/class）が設定されている。
+
+### T03 基本スタイル実装（P0）
+- 目的: 可読性と操作性を満たす基本UIを実装する。
+- 作業内容:
+	- 入力欄・ボタン・一覧・フィルタの基本レイアウトを作成する。
+	- 完了状態の視覚表現（打ち消し線など）を実装する。
+	- フォーカス可視化スタイルを実装する。
+- 完了条件:
+	- 主要要素が崩れず表示され、状態の見分けが可能。
+
+### T04 レスポンシブ対応（P1）
+- 目的: モバイルからデスクトップまで利用可能にする。
+- 作業内容:
+	- モバイルファーストでスタイルを調整する。
+	- 必要なメディアクエリを追加する。
+	- タップしやすい操作サイズを確保する。
+- 完了条件:
+	- 幅320px以上で主要機能が問題なく操作できる。
+
+### T05 データモデルと状態管理実装（P0）
+- 目的: ToDoデータを一貫して扱う。
+- 作業内容:
+	- `todos` 配列と `currentFilter` 状態を定義する。
+	- ToDoオブジェクト（id/text/completed/createdAt）生成ロジックを実装する。
+	- 文字列トリム、空入力拒否、文字数制限（例: 200）を実装する。
+- 完了条件:
+	- 状態が関数経由で更新され、入力バリデーションが効く。
+
+### T06 LocalStorage読み書き実装（P0）
+- 目的: ページ再読み込み後もデータを保持する。
+- 作業内容:
+	- 保存キー `todo-app-tasks` を定義する。
+	- 初期読み込み `loadTodos()` を実装する。
+	- 保存 `saveTodos()` を実装する。
+	- パース失敗・利用不可時のフォールバックを実装する。
+- 完了条件:
+	- 追加/切替/削除後に再読み込みしても状態が保持される。
+
+### T07 描画処理実装（P0）
+- 目的: 状態をUIへ反映する。
+- 作業内容:
+	- `render()` を実装し、一覧描画と空状態表示を制御する。
+	- フィルタ適用後の表示項目を描画する。
+	- フィルタの選択状態を視覚反映する。
+- 完了条件:
+	- 状態変更時にUIが即時更新される。
+
+### T08 追加機能実装（P0）
+- 目的: 新規ToDoの登録を可能にする。
+- 作業内容:
+	- フォーム `submit` ハンドラを実装する。
+	- 追加後に入力クリア・保存・再描画を行う。
+- 完了条件:
+	- 受け入れ基準 AC-1 を満たす。
+
+### T09 完了切り替え機能実装（P0）
+- 目的: 進捗管理を可能にする。
+- 作業内容:
+	- 一覧のクリックイベント委譲で完了切替を実装する。
+	- 状態更新後に保存・再描画する。
+- 完了条件:
+	- 受け入れ基準 AC-2 を満たす。
+
+### T10 削除機能実装（P0）
+- 目的: 不要タスクを除去できるようにする。
+- 作業内容:
+	- 一覧のクリックイベント委譲で削除処理を実装する。
+	- 削除後に保存・再描画する。
+- 完了条件:
+	- 受け入れ基準 AC-3 を満たす。
+
+### T11 フィルタ機能実装（P0）
+- 目的: 表示対象を絞り込めるようにする。
+- 作業内容:
+	- `all/active/completed` の切替処理を実装する。
+	- フィルタボタンのアクティブ状態を切り替える。
+- 完了条件:
+	- 受け入れ基準 AC-5 を満たす。
+
+### T12 アクセシビリティ実装（P1）
+- 目的: キーボード利用者と支援技術への配慮を満たす。
+- 作業内容:
+	- ボタン・入力欄ラベル・aria属性を確認/補完する。
+	- キーボードのみで主要操作が可能か確認し修正する。
+- 完了条件:
+	- 受け入れ基準 AC-6 を満たす。
+
+### T13 異常系ハンドリング実装（P1）
+- 目的: データ破損や保存不可時でも継続利用可能にする。
+- 作業内容:
+	- LocalStorage利用不可時の通知表示を実装する。
+	- JSON破損時の初期化とエラーハンドリングを実装する。
+- 完了条件:
+	- 受け入れ基準 AC-7 を満たす。
+
+### T14 手動テスト実施（P0）
+- 目的: 受け入れ基準に対する実装完了を確認する。
+- 作業内容:
+	- AC-1〜AC-7 をチェックリストで検証する。
+	- 不具合があれば修正し再確認する。
+- 完了条件:
+	- 主要機能の回帰不具合がない。
+
+## 3. 実行順序
+1. T01
+2. T02
+3. T03
+4. T05
+5. T06
+6. T07
+7. T08
+8. T09
+9. T10
+10. T11
+11. T04
+12. T12
+13. T13
+14. T14
+
+## 4. 依存関係
+- T08/T09/T10/T11 は T05/T06/T07 に依存。
+- T12 は T02/T03/T08〜T11 完了後に実施。
+- T14 は全タスク完了後に実施。
+
+## 5. Definition of Done
+- 仕様書の受け入れ基準 AC-1〜AC-7 を満たす。
+- 再読み込み後もデータ保持が確認できる。
+- モバイル/デスクトップ双方で主要操作が実行できる。
+- 重大なコンソールエラーが発生しない。
